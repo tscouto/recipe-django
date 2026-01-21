@@ -1,0 +1,79 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# Virtual Environment
+# =========================
+venv/
+env/
+ENV/
+.venv/
+
+# =========================
+# Django
+# =========================
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# =========================
+# Django migrations
+# (normalmente NÃO ignorar migrations,
+# mas se quiser ignorar tudo exceto __init__.py)
+# =========================
+# */migrations/*
+# !*/migrations/__init__.py
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+.envrc
+
+# =========================
+# IDEs e editores
+# =========================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# =========================
+# Sistema operacional
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Testes
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# Node / Frontend (caso use)
+# =========================
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# =========================
+# Build / distribuição
+# =========================
+build/
+dist/
+*.egg-info/
+
+# =========================
+# Outros
+# =========================
+.cache/
