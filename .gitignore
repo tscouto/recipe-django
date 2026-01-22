@@ -35,8 +35,10 @@ staticfiles/
 # Environment variables
 # =========================
 .env
-.env.*
+.env.local
+.env.production
 .envrc
+
 
 # =========================
 # IDEs e editores
