@@ -1,0 +1,136 @@
+GUIA RÁPIDO SSH (Windows → Linux)
+
+PARTE 1 — NO WINDOWS (cliente)
+
+1) Criar a chave (faça uma vez só)
+Comando:
+ssh-keygen -t ed25519 -C "tiago@windows"
+
+Arquivos criados em:
+C:\Users\Tiago\.ssh\
+- id_ed25519 (chave privada)
+- id_ed25519.pub (chave pública)
+
+2) Ver a chave pública
+Comando:
+type %USERPROFILE%\.ssh\id_ed25519.pub
+
+3) Criar arquivo config (opcional)
+Arquivo:
+C:\Users\Tiago\.ssh\config
+
+Conteúdo:
+Host servidor-linux
+    HostName 192.168.0.109
+    User tiago
+    IdentityFile ~/.ssh/id_ed25519
+
+Conectar com:
+ssh servidor-linux
+
+
+PARTE 2 — NO LINUX (servidor)
+
+4) Criar pasta .ssh
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+
+5) Criar authorized_keys
+nano ~/.ssh/authorized_keys
+
+Cole a chave pública (ssh-ed25519 ...)
+
+Permissões:
+chmod 600 ~/.ssh/authorized_keys
+
+6) Configurar SSH
+sudo nano /etc/ssh/sshd_config
+
+Garantir:
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+
+(opcional)
+PasswordAuthentication no
+
+7) Reiniciar SSH
+sudo systemctl restart ssh
+sudo systemctl status ssh
+
+
+PARTE 3 — TESTE FINAL
+
+No Windows:
+ssh servidor-linux
+
+Resultado:
+- Não pede senha
+- Login automático
+
+
+CHECKLIST DE ERROS COMUNS
+
+- Pede senha: chave errada ou não autorizada
+- Permission denied: permissões incorretas
+- Não conecta: serviço SSH parado
+- Usa chave errada: falta IdentityFile
+
+
+=====================================================================
+PASSO A PASSO: CRIAR E CONFIGURAR SERVIDOR LINUX COM ACESSO EXTERNO
+=====================================================================
+Referência: Vídeo Gilberto Toledo - Servidor Web Ubuntu
+
+1. IDENTIFICAÇÃO DO SERVIDOR (IP LOCAL)
+---------------------------------------
+No terminal do seu servidor Ubuntu, digite:
+$ ifconfig
+
+- Procure pelo campo "inet" (ex: 192.168.0.107).
+- Este é o endereço do seu servidor dentro da sua casa.
+- DICA: Fixe este IP no roteador para que ele não mude sozinho.
+
+2. ACESSO REMOTO (SSH) - OPCIONAL
+---------------------------------
+Para controlar o servidor de outro computador Windows:
+1. Abra o CMD ou PowerShell.
+2. Digite: ssh seu_usuario@ip_do_servidor
+3. Se o comando não existir, instale o "Cliente OpenSSH" nos 
+   recursos opcionais do Windows.
+
+3. REDIRECIONAMENTO DE PORTAS (ROTEADOR)
+----------------------------------------
+O roteador precisa saber para onde enviar o tráfego da internet.
+1. Acesse o IP do roteador (ex: 192.168.0.1) pelo navegador.
+2. Procure por: "Virtual Server", "Port Forwarding" ou "Redirecionamento".
+3. Crie uma nova regra:
+   - Porta Externa: 9000 (ou outra de sua escolha acima de 1024).
+   - Porta Interna: 80 (padrão do site/Apache).
+   - IP do Servidor: O IP que você anotou no passo 1.
+   - Protocolo: TCP ou ALL.
+4. Salve a configuração.
+
+4. CONFIGURANDO O DNS DINÂMICO (NO-IP)
+--------------------------------------
+Como seu IP da internet muda, o No-IP cria um "nome" fixo.
+1. Crie uma conta em: www.noip.com
+2. Crie um Hostname (ex: meuservidorteste.ddns.net).
+3. No seu roteador, procure a aba "DDNS" ou "Dynamic DNS".
+4. Preencha com os dados da sua conta No-IP:
+   - Provedor: No-IP
+   - Nome de Usuário (ou e-mail)
+   - Senha
+   - Hostname criado (ex: meuservidorteste.ddns.net)
+5. Verifique se o status aparece como "Conectado" ou "Sucesso".
+
+5. TESTANDO O ACESSO
+--------------------
+IMPORTANTE: Teste fora da sua rede Wi-Fi (use o 4G do celular).
+1. Abra o navegador no celular.
+2. Digite: http://seu_dominio.ddns.net:9000
+3. Se carregar a página do Apache, seu servidor está online para o mundo!
+
+OBSERVAÇÃO DE SEGURANÇA:
+Sempre mantenha o Linux atualizado (sudo apt update) e use senhas 
+fortes, pois seu servidor estará exposto à internet.
+=====================================================================
