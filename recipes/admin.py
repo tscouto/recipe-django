@@ -9,10 +9,10 @@ class CategoryAdmin(admin.ModelAdmin):
  pass
 
 
-class TagInline(GenericStackedInline):
-     model = Tag
-     fields = 'name',
-     extra = 1
+# class TagInline(GenericStackedInline):
+#      model = Tag
+#      fields = 'name',
+#      extra = 1
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
@@ -28,9 +28,10 @@ class RecipeAdmin(admin.ModelAdmin):
         "slug": ('title',)
 
     }
-    inlines = [
-        TagInline
-    ]
+    autocomplete_fields = 'tags',
+    # inlines = [
+    #     TagInline
+    # ]
 
 
 admin.site.register(Category, CategoryAdmin)
