@@ -5,14 +5,13 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.db.models.aggregates import Count
 
-
-
 # from recipes.utils.recipes.factory import make_recipe
 from recipes.models import Recipe
 from django.db.models.functions import Concat
-from django.db.models import Q,F, Value
+from django.db.models import Q, F, Value
 from django.views.generic import DetailView, ListView
-
+from django.utils import translation
+from django.utils.translation import gettext as _
 from tag.models import Tag
 from utils.pagination import make_pagination
 
@@ -22,9 +21,10 @@ PER_PAGE = int(os.environ.get("PER_PAGE", 6))
 # python -c "import string as s;from random import SystemRandom as sr;print(''.join(sr().choices(s.ascii_letters + s.punctuation, k=64)))"
 # Create your views here.
 
+
 def theory(request, *args, **kwargs):
     # recipes = Recipe.objects.all()
-    
+
     # recipes = recipes.filter(title__icontains="Receita")
     # list(recipes)
 
@@ -32,36 +32,32 @@ def theory(request, *args, **kwargs):
     #     Q(title__icontains="receita") | Q(id__gt=5)
     # )[0:10]
     # recipes = Recipe.objects.values('id','title','author__first_name')[:10]
-    #recipes = Recipe.objects.only('id','title', 'author__first_name')[:10]
+    # recipes = Recipe.objects.only('id','title', 'author__first_name')[:10]
     # recipes = Recipe.objects.all().annotate(author_full_name=Concat(
     #     F('author__first_name'), Value('('),
     #     F('author__username'), Value(')'),
     # )).order_by('-id')
     recipes = Recipe.objects.get_published()
 
-    number_of_recipes = recipes.aggregate(number=Count('id'))
-    context = {
-        'recipes': recipes,
-        'number_of_recipes': number_of_recipes['number']
-    }
+    number_of_recipes = recipes.aggregate(number=Count("id"))
+    context = {"recipes": recipes, "number_of_recipes": number_of_recipes["number"]}
     return render(request, "recipes/pages/theory.html", context=context)
-
 
 
 class RecipeListViewBase(ListView):
     model = Recipe
-    context_object_name = 'recipes'
-    ordering = ['-id']
-    template_name = 'recipes/pages/home.html'
+    context_object_name = "recipes"
+    ordering = ["-id"]
+    template_name = "recipes/pages/home.html"
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
         qs = qs.filter(
             is_published=True,
         )
-        qs = qs.select_related('author', 'category')
-        qs = qs.select_related('author', 'category', 'author__profile')
-        qs = qs.prefetch_related('tags')
+        qs = qs.select_related("author", "category")
+        qs = qs.select_related("author", "category", "author__profile")
+        qs = qs.prefetch_related("tags")
         return qs
 
     def get_context_data(self, *args, **kwargs):
@@ -69,7 +65,15 @@ class RecipeListViewBase(ListView):
         page_obj, pagination_range = make_pagination(
             self.request, ctx.get("recipes"), PER_PAGE
         )
-        ctx.update({"recipes": page_obj, "pagination_range": pagination_range})
+
+        html_language = translation.get_language()
+        ctx.update(
+            {
+                "recipes": page_obj,
+                "pagination_range": pagination_range,
+                "html_language": html_language,
+            }
+        )
         return ctx
 
 
@@ -92,8 +96,14 @@ class RecipeListViewCategory(RecipeListViewBase):
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
+        category_translation = _("Category")
 
-        ctx.update({"title": f'{ctx.get("recipes")[0].category.name} - Category | '})
+        ctx.update(
+            {
+                "title": f'{ctx.get("recipes")[0].category.name} - '
+                f"{category_translation} | "
+            }
+        )
 
         return ctx
 
@@ -106,30 +116,32 @@ class RecipeListViewCategory(RecipeListViewBase):
 
         return qs
 
+
 class RecipeListViewTag(RecipeListViewBase):
-    template_name = 'recipes/pages/tag.html'
+    template_name = "recipes/pages/tag.html"
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
-        qs = qs.filter(tags__slug=self.kwargs.get('slug', ''))
+        qs = qs.filter(tags__slug=self.kwargs.get("slug", ""))
         return qs
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
-        page_title = Tag.objects.filter(
-            slug=self.kwargs.get('slug', '')
-        ).first()
+        page_title = Tag.objects.filter(slug=self.kwargs.get("slug", "")).first()
 
         if not page_title:
-            page_title = 'No recipes found'
+            page_title = "No recipes found"
 
-        page_title = f'{page_title} - Tag |'
+        page_title = f"{page_title} - Tag |"
 
-        ctx.update({
-            'page_title': page_title,
-        })
+        ctx.update(
+            {
+                "page_title": page_title,
+            }
+        )
 
         return ctx
+
 
 class RecipeListViewSearch(RecipeListViewBase):
     template_name = "recipes/pages/search.html"
@@ -161,13 +173,10 @@ class RecipeListViewSearch(RecipeListViewBase):
         return ctx
 
 
-
-
-
 class RecipeDetail(DetailView):
     model = Recipe
-    context_object_name = 'recipe'
-    template_name = 'recipes/pages/recipe-view.html'
+    context_object_name = "recipe"
+    template_name = "recipes/pages/recipe-view.html"
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
@@ -177,9 +186,7 @@ class RecipeDetail(DetailView):
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
 
-        ctx.update({
-            'is_detail_page': True
-        })
+        ctx.update({"is_detail_page": True})
 
         return ctx
 
@@ -202,6 +209,7 @@ class RecipeDetailAPI(RecipeDetail):
         del recipe_dict["is_published"]
 
         return JsonResponse(recipe_dict, safe=False)
+
 
 # def recipe(request, id):
 
