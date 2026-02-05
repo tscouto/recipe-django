@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -10,16 +9,24 @@ from tag.models import Tag
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
+from unicodedata import category
 
 
 
 class RecipeAPIv2ListPagination(PageNumberPagination):
-    page_size = 1
+    page_size = 5
 
 class RecipeAPIv2ViewSet(ModelViewSet):
      queryset = Recipe.objects.get_published()
      serializer_class = RecipeSerializer
      pagination_class = RecipeAPIv2ListPagination
+
+     def get_queryset(self):
+         qs =  super().get_queryset()
+         category_id = self.request.query_params.get('category_id','')
+         if category_id != '' and category_id.isnumeric():
+            qs = qs.filter(category_id=category_id)
+         return qs
 
      def partial_update(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
