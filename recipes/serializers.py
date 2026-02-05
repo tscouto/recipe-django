@@ -72,8 +72,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         AuthorRecipeValidator(
             data=attrs, 
             ErrorClass=serializers.ValidationError)
-       
-
         return super_validate
 
     def validate_title(self, value):

@@ -16,4 +16,4 @@ def parse_comma_sep_str_to_list(comma_sep_str):
 
 
 print(parse_comma_sep_str_to_list(get_env_variable("ALLOWED_HOSTS")))
-print(parse_comma_sep_str_to_list("a ,b ,c "))
+
