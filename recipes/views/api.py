@@ -10,7 +10,7 @@ from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIVi
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 from unicodedata import category
-
+from rest_framework.permissions import IsAuthenticated
 
 
 class RecipeAPIv2ListPagination(PageNumberPagination):
@@ -20,6 +20,7 @@ class RecipeAPIv2ViewSet(ModelViewSet):
      queryset = Recipe.objects.get_published()
      serializer_class = RecipeSerializer
      pagination_class = RecipeAPIv2ListPagination
+     permission_classes = [IsAuthenticated,]
 
      def get_queryset(self):
          qs =  super().get_queryset()
