@@ -1,58 +1,165 @@
-# 🍽️ Recipe Project – Django
+# 🍽️ Recipe Project -- Django
 
-Projeto web desenvolvido com **Django**, focado no gerenciamento e visualização de receitas, com funcionalidades completas de cadastro, busca, autenticação e painel administrativo.
+## 📌 About the Project
 
-Este projeto faz parte da minha evolução prática na área de **Engenharia de Software e Desenvolvimento Backend**, aplicando boas práticas, organização de código e padrões do framework Django.
+Recipe Project is a web application developed using **Python** and
+**Django** for managing and displaying cooking recipes in an organized
+and intuitive way.
 
----
+This project was built to apply backend development best practices,
+including clean architecture, authentication, CRUD operations, and
+REST-ready structure.
 
-## 🚀 Funcionalidades
+It serves as: - A backend portfolio project - A Django learning
+project - A base structure for scalable web applications
 
-- 📋 Listagem de receitas
-- 🔍 Busca de receitas por título ou descrição
-- 🧑‍🍳 Cadastro e edição de receitas pelo autor
-- 🔐 Sistema de autenticação (login e registro)
-- 🧭 Painel do usuário (dashboard)
-- 📄 Paginação de resultados
-- 🗂️ Organização por categorias
-- 🧪 Testes automatizados
-- 🔒 Controle de receitas publicadas e não publicadas
+------------------------------------------------------------------------
 
----
+## 🚀 Features
 
-## 🛠️ Tecnologias Utilizadas
+-   ✅ Recipe listing with pagination
+-   🔍 Search functionality
+-   🏷️ Categories for recipes
+-   🔐 User authentication (login & registration)
+-   ✏️ Create, update and delete recipes (CRUD)
+-   📄 Organized template structure
+-   🗂️ Clean project architecture
+-   🧪 Automated tests
+
+------------------------------------------------------------------------
+
+## 🛠 Technologies Used
 
 ### Backend
-- Python
-- Django
-- Django ORM
+
+-   Python 3
+-   Django
+-   Django ORM
 
 ### Frontend
-- HTML5
-- CSS3
-- Templates Django
 
-### Banco de Dados
-- SQLite (desenvolvimento)
-- Estrutura preparada para PostgreSQL / MySQL
+-   HTML5
+-   CSS3
+-   Django Templates
 
-### Outros
-- Git & GitHub
-- Virtual Environment (venv)
-- Pytest / Django TestCase
+### Database
 
----
+-   SQLite (default development database)
+-   Compatible with PostgreSQL / MySQL
 
-## 📂 Estrutura do Projeto (resumida)
+### Tools
 
-```text
-project/
-│── recipes/
-│── authors/
-│── templates/
-│── static/
-│── utils/
-│── manage.py
-│── requirements.txt
-│── .gitignore
-│── README.md
+-   Git & GitHub
+-   Virtual Environment (venv)
+-   Pytest / Django TestCase
+
+------------------------------------------------------------------------
+
+## 📂 Project Structure
+
+    recipe-django/
+    │── project/              # Main Django configuration
+    │── recipes/              # Core app (recipes logic)
+    │── templates/            # HTML templates
+    │── static/               # Static files (CSS, images)
+    │── utils/                # Utility functions
+    │── manage.py             # Django CLI entrypoint
+    │── requirements.txt      # Project dependencies
+
+------------------------------------------------------------------------
+
+## 🧑‍💻 Installation Guide
+
+### 1️⃣ Clone the repository
+
+``` bash
+git clone https://github.com/tscouto/recipe-django.git
+cd recipe-django
+```
+
+### 2️⃣ Create a virtual environment
+
+``` bash
+python -m venv venv
+```
+
+Activate:
+
+**Linux/macOS**
+
+``` bash
+source venv/bin/activate
+```
+
+**Windows**
+
+``` bash
+venv\Scripts\activate
+```
+
+------------------------------------------------------------------------
+
+### 3️⃣ Install dependencies
+
+``` bash
+pip install -r requirements.txt
+```
+
+------------------------------------------------------------------------
+
+### 4️⃣ Apply database migrations
+
+``` bash
+python manage.py migrate
+```
+
+------------------------------------------------------------------------
+
+### 5️⃣ Create a superuser (admin access)
+
+``` bash
+python manage.py createsuperuser
+```
+
+------------------------------------------------------------------------
+
+### 6️⃣ Run the development server
+
+``` bash
+python manage.py runserver
+```
+
+Access in your browser:
+
+    http://localhost:8000/
+
+------------------------------------------------------------------------
+
+## 🧪 Running Tests
+
+To execute tests:
+
+``` bash
+pytest
+```
+
+or
+
+``` bash
+python manage.py test
+```
+
+------------------------------------------------------------------------
+
+## 📈 Future Improvements
+
+-   Docker containerization
+-   CI/CD integration
+-   API version with Django Rest Framework
+-   Production-ready deployment
+
+------------------------------------------------------------------------
+
+## 📄 License
+
+This project is for educational and portfolio purposes.
